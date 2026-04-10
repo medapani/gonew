@@ -67,6 +67,11 @@ func run(args []string) error {
 		return fmt.Errorf("read makefile template: %w", err)
 	}
 	makefileTemplate = renderTemplate(makefileTemplate, projectName)
+	taskfileTemplate, err := readTemplate("t_Taskfile.yml")
+	if err != nil {
+		return fmt.Errorf("read taskfile template: %w", err)
+	}
+	taskfileTemplate = renderTemplate(taskfileTemplate, projectName)
 	readmeTemplate, err := readTemplate("t_README.md")
 	if err != nil {
 		return fmt.Errorf("read README template: %w", err)
@@ -92,6 +97,9 @@ func run(args []string) error {
 		return err
 	}
 	if err := writeFile(filepath.Join(projectDir, "Makefile"), makefileTemplate); err != nil {
+		return err
+	}
+	if err := writeFile(filepath.Join(projectDir, "Taskfile.yml"), taskfileTemplate); err != nil {
 		return err
 	}
 	if err := writeFile(filepath.Join(projectDir, "README.md"), readmeTemplate); err != nil {

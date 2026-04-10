@@ -5,7 +5,21 @@ Goプロジェクトのテンプレートを作成するCLIツールです。
 ## ビルド
 
 ```bash
-go build -o gonew .
+# Makefile
+make build
+
+# Taskfile
+task build
+```
+
+## インストール
+
+```bash
+# Makefile
+make install
+
+# Taskfile
+task install
 ```
 
 ## 実行
@@ -28,6 +42,7 @@ go build -o gonew .
 - `.gitignore` (`.DS_Store`)
 - `.golangci.yml`
 - `Makefile`
+- `Taskfile.yml`
 - `README.md`
 - `internal/`
 - `cmd/`
