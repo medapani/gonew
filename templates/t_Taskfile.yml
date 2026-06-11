@@ -10,11 +10,22 @@ vars:
   STRIP: "-trimpath -buildvcs=false"
 
 tasks:
+  list:
+    desc: タスク一覧を表示
+    cmds:
+      - task --list
+
   build:
-    desc: ビルド
+    desc: マルチプラットフォームビルド
+    deps: [build-mac, build-linux]
+
+  build-mac:
+    desc: macOS向けビルド
     cmds:
       - echo "Building..."
-      - go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}} .
+      - go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-darwin .
+      - echo "Built binaries:"
+      - ls -lh bin/{{.BINARY_NAME}}-darwin
 
   build-linux:
     desc: Linux向けビルド
