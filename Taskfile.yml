@@ -12,12 +12,14 @@ vars:
 tasks:
   build:
     desc: ビルド
+    deps: [vuln]
     cmds:
       - echo "Building..."
       - go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}} .
 
   build-linux:
     desc: Linux向けビルド
+    deps: [vuln]
     cmds:
       - echo "Building for Linux..."
       - GOOS=linux GOARCH=amd64 go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-linux-amd64 .
@@ -27,6 +29,7 @@ tasks:
 
   build-windows:
     desc: Windows向けビルド
+    deps: [vuln]
     cmds:
       - echo "Building for Windows..."
       - GOOS=windows GOARCH=amd64 go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-windows-amd64.exe .
@@ -47,6 +50,12 @@ tasks:
       - echo "Cleaning..."
       - rm -rf bin/
       - go clean
+
+  vuln:
+    desc: 脆弱性チェック
+    cmds:
+      - command -v govulncheck >/dev/null 2>&1 || go install golang.org/x/vuln/cmd/govulncheck@latest
+      - govulncheck ./...
 
   test:
     desc: テスト

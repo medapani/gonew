@@ -1,4 +1,4 @@
-.PHONY: build build-linux build-windows run clean test install deps fmt lint
+.PHONY: build build-linux build-windows run clean vuln test install deps fmt lint
 
 # バイナリ名
 BINARY_NAME=gonew
@@ -15,12 +15,12 @@ LDFLAGS=-ldflags "-s -w -X main.appVersion=$(VERSION)"
 STRIP=-trimpath -buildvcs=false
 
 # ビルドターゲット
-build:
+build: vuln
 	@echo "Building..."
 	go build $(GCFLAGS) $(STRIP) $(LDFLAGS) -o bin/$(BINARY_NAME) .
 
 # Linux向けビルド
-build-linux:
+build-linux: vuln
 	@echo "Building for Linux..."
 	GOOS=linux GOARCH=amd64 go build $(GCFLAGS) $(STRIP) $(LDFLAGS) -o bin/$(BINARY_NAME)-linux-amd64 .
 	GOOS=linux GOARCH=arm64 go build $(GCFLAGS) $(STRIP) $(LDFLAGS) -o bin/$(BINARY_NAME)-linux-arm64 .
@@ -28,7 +28,7 @@ build-linux:
 	@ls -lh bin/$(BINARY_NAME)-linux-*
 
 # Windows向けビルド
-build-windows:
+build-windows: vuln
 	@echo "Building for Windows..."
 	GOOS=windows GOARCH=amd64 go build $(GCFLAGS) $(STRIP) $(LDFLAGS) -o bin/$(BINARY_NAME)-windows-amd64.exe .
 	GOOS=windows GOARCH=arm64 go build $(GCFLAGS) $(STRIP) $(LDFLAGS) -o bin/$(BINARY_NAME)-windows-arm64.exe .
@@ -45,6 +45,11 @@ clean:
 	@echo "Cleaning..."
 	rm -rf bin/
 	go clean
+
+# 脆弱性チェック
+vuln:
+	@command -v govulncheck >/dev/null 2>&1 || go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck ./...
 
 # テスト
 test:
