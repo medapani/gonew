@@ -31,10 +31,11 @@ tasks:
   build-linux:
     desc: Linux向けビルド
     deps: [vuln]
+    # scratchイメージで実行できるよう、Cライブラリへの動的リンクを無効にする。
     cmds:
       - echo "Building for Linux..."
-      - GOOS=linux GOARCH=amd64 go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-linux-amd64 .
-      - GOOS=linux GOARCH=arm64 go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-linux-arm64 .
+      - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-linux-amd64 .
+      - CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build {{.STRIP}} {{.LDFLAGS}} -o bin/{{.BINARY_NAME}}-linux-arm64 .
       - echo "Built binaries:"
       - ls -lh bin/{{.BINARY_NAME}}-linux-*
 

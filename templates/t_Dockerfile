@@ -1,0 +1,5 @@
+FROM scratch
+
+COPY bin/{{PROJECT_NAME}}-linux-amd64 /{{PROJECT_NAME}}
+
+ENTRYPOINT ["/{{PROJECT_NAME}}"]

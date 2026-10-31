@@ -1,0 +1,6 @@
+services:
+  app:
+    # DockerfileがコピーするLinux用バイナリと一致させる。
+    platform: linux/amd64
+    build:
+      context: .

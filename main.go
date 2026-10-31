@@ -76,6 +76,15 @@ func run(args []string) error {
 	if err != nil {
 		return fmt.Errorf("read README template: %w", err)
 	}
+	dockerfileTemplate, err := readTemplate("t_Dockerfile")
+	if err != nil {
+		return fmt.Errorf("read Dockerfile template: %w", err)
+	}
+	dockerfileTemplate = renderTemplate(dockerfileTemplate, projectName)
+	composeTemplate, err := readTemplate("t_docker-compose.yml")
+	if err != nil {
+		return fmt.Errorf("read docker-compose template: %w", err)
+	}
 
 	if err := os.Mkdir(projectDir, 0o755); err != nil {
 		return fmt.Errorf("create project directory: %w", err)
@@ -103,6 +112,12 @@ func run(args []string) error {
 		return err
 	}
 	if err := writeFile(filepath.Join(projectDir, "README.md"), readmeTemplate); err != nil {
+		return err
+	}
+	if err := writeFile(filepath.Join(projectDir, "Dockerfile"), dockerfileTemplate); err != nil {
+		return err
+	}
+	if err := writeFile(filepath.Join(projectDir, "docker-compose.yml"), composeTemplate); err != nil {
 		return err
 	}
 
